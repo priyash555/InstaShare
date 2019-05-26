@@ -1,0 +1,27 @@
+{% extends './basic.html' %}
+
+{% block main %}
+<br>
+<br>
+<br>
+
+<div class="card">
+
+  <!-- Card image -->
+
+  <!-- Card content -->
+  <div class="card-body">
+
+    <!-- Title -->
+    <h4 class="card-title"><a>{{ object.title }}</a></h4>
+    <!-- Text -->
+    <p class="card-text">{{ object.content }}</p>
+    <span>
+    <p class="card-text">{{ object.author }}</p>
+    </span>
+  </div>
+
+</div>
+<!-- Card -->
+
+{% endblock main %}
