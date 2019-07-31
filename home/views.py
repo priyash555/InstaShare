@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # Create your views here.
@@ -42,9 +42,31 @@ class ModelUpdateView(LoginRequiredMixin, UserPassesTestMixin ,CreateView):
             return True
         return False
 
-class ModelDetailView(DetailView):
-    model = Post
-    template_name = "home/detail.html"
+# class ModelDetailView(DetailView):
+#     model = Post
+#     template_name = "home/detail.html"
+@login_required
+def postdetails(request,pk):
+    posts = (Post.objects.filter(id=pk))
+    user = request.user
+    comments = (Comment.objects.filter(inpost=posts[0]))
+
+    # print(posts)
+    # print(comments)
+    return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments})
+@login_required
+def commentsubmit(request,pk):
+    posts = (Post.objects.filter(id=pk))
+    user = request.user
+    content = request.POST["content"]
+    comment =  Comment(author=user,inpost=posts[0],content=content)
+    comment.save()
+    comments = (Comment.objects.filter(inpost=posts[0]))
+    return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments})
+
+
+
+
 
 class ModelDeleteView(LoginRequiredMixin, UserPassesTestMixin , DeleteView):
     model = Post
