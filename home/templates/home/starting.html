@@ -14,18 +14,18 @@
   <div class="card-body">
 
     <!-- Title -->
-    <h4 class="card-title"><a>{{ post.title }}</a></h4>
+    <h4 class="card-title"><a href={% url 'home-detailpost' post.id %}>{{ post.title }}</a></h4>
+    <h6 class="card-title"><a href={% url 'home-user' post.author %}>{{ post.author }}</a></h6>
     <!-- Text -->
     <p class="card-text">{{ post.content }}</p>
-    <span>
-    <p class="card-text">{{ post.author }}</p>
-    </span>
   </div>
 
 </div>
 <!-- Card -->
 {% endfor %}
 
+<br>
+<br>
  {% if is_paginated %}
 
       {% if page_obj.has_previous %}

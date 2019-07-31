@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import starting, PostListView, ModelCreateView, ModelUpdateView, ModelDetailView, ModelDeleteView, UserListView
+from .views import starting, PostListView, ModelCreateView, ModelUpdateView, ModelDetailView, ModelDeleteView, UserListView, about
 
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('detail/<int:pk>/', ModelDetailView.as_view(), name="home-detailpost"),
     path('delete/<int:pk>/', ModelDeleteView.as_view(), name="home-deletepost"),
     path('user/<str:username>/', UserListView.as_view(), name="home-user"),
+    path('about/', about , name='home-about'),
 ]

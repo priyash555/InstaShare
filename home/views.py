@@ -69,3 +69,5 @@ class UserListView(ListView):
         user = get_object_or_404(User , username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
     
+def about(request):
+    return render(request, 'home/about.html', {})
