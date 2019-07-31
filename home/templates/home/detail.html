@@ -1,0 +1,50 @@
+{% extends './basic.html' %}
+{% load crispy_forms_tags %}
+{% block main %}
+<br>
+<br>
+<br>
+{% for post in posts %}
+<div class="card">
+
+  <!-- Card image -->
+
+  <!-- Card content -->
+  <div class="card-body">
+
+    <!-- Title -->
+    <h4 class="card-title"><a>{{ post.title }}</a></h4>
+    <h6 class="card-title"><a href={% url 'home-user' post.author %}>{{ post.author }}</a></h6>
+    <!-- Text -->
+    <p class="card-text">{{ post.content }}</p>
+  </div>
+  {% if post.author.id == user.id %}
+  <a type="button" class="btn btn-primary" href={% url 'home-updatepost' post.id%}>Update</a>
+  <a type="button" class="btn btn-danger" href={% url 'home-deletepost' post.id%}>Delete</a>
+  {% endif %}
+</div>
+{% endfor %}
+{{ comments.count }}
+{% for comment in comments %}
+<blockquote class="blockquote">
+  <p class="mb-0">By {{ comment.author }} - {{ comment.content }}</p>
+</blockquote>
+{% endfor %}
+   <form action="commentsubmit/" method="Post" id="feedbackform">
+                 {% csrf_token %}
+                 <div class="form-group">
+                  <span class="form-label">Comment</span>
+                  <input id="content" class="form-control" type="text" placeholder="" name="content" required>
+                </div>
+     <button type="button"  onclick="submit()" class="submit-btn">Submit</button>
+
+   </form>
+ <script type="text/javascript">
+          function submit() {
+              document.getElementById("feedbackform").submit();
+          }
+        </script>
+
+<!-- Card -->
+
+{% endblock main %}
