@@ -51,9 +51,13 @@ def postdetails(request,pk):
     user = request.user
     comments = (Comment.objects.filter(inpost=posts[0]))
 
+    is_liked = False
+    if posts[0].likes.filter(id=user.id).exists():
+        is_liked= True
+
     # print(posts)
     # print(comments)
-    return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments})
+    return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments,'is_liked':is_liked})
 @login_required
 def commentsubmit(request,pk):
     posts = (Post.objects.filter(id=pk))
@@ -63,6 +67,19 @@ def commentsubmit(request,pk):
     comment.save()
     comments = (Comment.objects.filter(inpost=posts[0]))
     return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments})
+
+@login_required
+def likepost(request,pk):
+    posts = (Post.objects.filter(id=pk))
+    user = request.user
+    is_liked = False
+    if posts[0].likes.filter(id=user.id).exists():
+        posts[0].likes.remove(user)
+        is_liked = False
+    else:
+        posts[0].likes.add(user)
+        is_liked = True
+    return redirect(posts[0].get_absolute_url(), is_liked=is_liked)
 
 
 
