@@ -23,22 +23,11 @@
   <a type="button" class="btn btn-danger" href={% url 'home-deletepost' post.id%}>Delete</a>
   {% endif %}
 </div>
-{{ post.likes.count }} <p>likes </p>
+
 {% endfor %}
-{% if user.is_authenticated %}
- <form action="likepost/" method="Post" id="like">
-                 {% csrf_token %}
-                 <div class="form-group">
-                {% if is_liked %}
-                     <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-danger">Dislike</button>
-                {% else %}
-                     <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">Like</button>
-                 {%endif%}
-                </div>
-
-
-   </form>
-{% endif %}
+<div id="like-section">
+    {% include 'home/like_section.html' %}
+</div>
 <br>
 
 {{ comments.count }}
@@ -61,6 +50,8 @@
               document.getElementById("feedbackform").submit();
           }
         </script>
+
+
 
 <!-- Card -->
 

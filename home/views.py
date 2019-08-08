@@ -6,6 +6,9 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView, D
 from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.template.loader import render_to_string
+from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
+
 # Create your views here.
 def starting(request):
     return render(request,'home/starting.html',{})
@@ -54,10 +57,11 @@ def postdetails(request,pk):
     is_liked = False
     if posts[0].likes.filter(id=user.id).exists():
         is_liked= True
-
+    total_likes = posts[0].total_likes()
+    print(total_likes)
     # print(posts)
     # print(comments)
-    return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments,'is_liked':is_liked})
+    return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments,'is_liked':is_liked,'total_likes':total_likes})
 @login_required
 def commentsubmit(request,pk):
     posts = (Post.objects.filter(id=pk))
@@ -66,12 +70,14 @@ def commentsubmit(request,pk):
     comment =  Comment(author=user,inpost=posts[0],content=content)
     comment.save()
     comments = (Comment.objects.filter(inpost=posts[0]))
+
     return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments})
 
 @login_required
 def likepost(request,pk):
     posts = (Post.objects.filter(id=pk))
     user = request.user
+    # print("aaya")
     is_liked = False
     if posts[0].likes.filter(id=user.id).exists():
         posts[0].likes.remove(user)
@@ -79,6 +85,17 @@ def likepost(request,pk):
     else:
         posts[0].likes.add(user)
         is_liked = True
+    total_likes = posts[0].total_likes()
+    # print(total_likes)
+    context ={'posts': posts[0], 'user': user,'is_liked':is_liked,'total_likes':total_likes}
+    # print("bv")
+    # print(request.is_ajax)
+    if request.is_ajax():
+        html = render_to_string('home/like_section.html', context, request=request)
+        # print("html")
+        return JsonResponse({'form': html})
+    print(is_liked)
+
     return redirect(posts[0].get_absolute_url(), is_liked=is_liked)
 
 

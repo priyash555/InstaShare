@@ -16,6 +16,9 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    def total_likes(self):
+        return self.likes.count()
+
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     inpost = models.ForeignKey(Post, on_delete=models.CASCADE)
