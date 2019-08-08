@@ -58,20 +58,26 @@ def postdetails(request,pk):
     if posts[0].likes.filter(id=user.id).exists():
         is_liked= True
     total_likes = posts[0].total_likes()
-    print(total_likes)
+    # print(total_likes)
     # print(posts)
     # print(comments)
     return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments,'is_liked':is_liked,'total_likes':total_likes})
 @login_required
 def commentsubmit(request,pk):
-    posts = (Post.objects.filter(id=pk))
-    user = request.user
-    content = request.POST["content"]
-    comment =  Comment(author=user,inpost=posts[0],content=content)
-    comment.save()
-    comments = (Comment.objects.filter(inpost=posts[0]))
+    print("hggfg")
+    if request.method == 'POST' and request.is_ajax():
+        posts = (Post.objects.filter(id=pk))
+        user = request.user
+        content = request.POST.get('content')
+        comment =  Comment(author=user,inpost=posts[0],content=content)
+        comment.save()
+        comments = (Comment.objects.filter(inpost=posts[0]))
+        context = {'posts': posts, 'user': user, 'comments':comments}
+        html = render_to_string('home/comment_section.html', context, request=request)
+        # print("html")
+        return JsonResponse({'form': html})
 
-    return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments})
+        # return render(request, 'home/detail.html', {'posts': posts, 'user': user, 'comments':comments})
 
 @login_required
 def likepost(request,pk):
@@ -94,7 +100,7 @@ def likepost(request,pk):
         html = render_to_string('home/like_section.html', context, request=request)
         # print("html")
         return JsonResponse({'form': html})
-    print(is_liked)
+    # print(is_liked)
 
     return redirect(posts[0].get_absolute_url(), is_liked=is_liked)
 

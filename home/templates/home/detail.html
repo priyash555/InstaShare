@@ -29,29 +29,9 @@
     {% include 'home/like_section.html' %}
 </div>
 <br>
-
-{{ comments.count }}
-{% for comment in comments %}
-<blockquote class="blockquote">
-  <p class="mb-0">By {{ comment.author }} - {{ comment.content }}</p>
-</blockquote>
-{% endfor %}
-   <form action="commentsubmit/" method="Post" id="feedbackform">
-                 {% csrf_token %}
-                 <div class="form-group">
-                  <span class="form-label">Comment</span>
-                  <input id="content" class="form-control" type="text" placeholder="" name="content" required>
-                </div>
-     <button type="button"  onclick="submit()" class="submit-btn">Submit</button>
-
-   </form>
- <script type="text/javascript">
-          function submit() {
-              document.getElementById("feedbackform").submit();
-          }
-        </script>
-
-
+<div id="comment-section">
+    {% include 'home/comment_section.html' %}
+</div>
 
 <!-- Card -->
 
