@@ -9,7 +9,6 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='likes',blank=True)
-    images = models.ImageField(upload_to='media', blank=True)
 
     def get_absolute_url(self):
         return reverse('home-detailpost', kwargs={'pk':self.pk})
@@ -19,8 +18,6 @@ class Post(models.Model):
 
     def total_likes(self):
         return self.likes.count()
-    class Meta:
-        ordering = ['-date_posted']
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)

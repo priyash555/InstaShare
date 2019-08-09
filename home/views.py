@@ -20,30 +20,21 @@ class PostListView(ListView):
     ordering = ['-date_posted']
     paginate_by = 5
 
-    def get_queryset(self):
-        return Post.objects.all()
-
 class ModelCreateView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = "home/createpost.html"
-    fields = ['title', 'content','images']
-
+    fields = ['title', 'content']
 
     def form_valid(self,form):
         form.instance.author = self.request.user
-        #  self.object = Post(images=self.get_form_kwargs().get('files')['images'])
-        # form.save()
         return super().form_valid(form)
-
 
     
 class ModelUpdateView(LoginRequiredMixin, UserPassesTestMixin ,CreateView):
     model = Post
     template_name = "home/createpost.html"
-    fields = ['title', 'content','images']
-    def get_object(self):
-        id_ = self.kwargs.get("id")
-        return get_object_or_404(Post,id=id_)
+    fields = ['title', 'content']
+
     def form_valid(self,form):
         form.instance.author = self.request.user
         return super().form_valid(form)
@@ -62,7 +53,6 @@ def postdetails(request,pk):
     posts = (Post.objects.filter(id=pk))
     user = request.user
     comments = (Comment.objects.filter(inpost=posts[0]))
-
 
     is_liked = False
     if posts[0].likes.filter(id=user.id).exists():
@@ -143,4 +133,3 @@ class UserListView(ListView):
     
 def about(request):
     return render(request, 'home/about.html', {})
-
