@@ -29,3 +29,8 @@ class Comment(models.Model):
 
     def get_absolute_url(self):
         return reverse("Comments_detail", kwargs={"pk": self.pk})
+    
+class ewq(model.Models):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    
+    
